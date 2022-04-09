@@ -87,6 +87,11 @@ if __name__ == "__main__":
         elif 'open stackoverflow' in query:
             webbrowser.open("stackoverflow.com")   
             break
+            
+            
+        elif 'open github' in query:
+            webbrowser.open("https://github.com")
+            break
 
 
         elif 'the time' in query:
