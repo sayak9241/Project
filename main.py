@@ -101,7 +101,7 @@ if __name__ == "__main__":
             break
         
 
-        elif 'open code' in query:
+        elif 'open vscode' in query:
             codePath = "C:\\Users\\Nirmalaya Mukherjee\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
             os.startfile(codePath)
             break
