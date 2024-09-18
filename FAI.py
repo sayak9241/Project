@@ -1,15 +1,14 @@
-import pyttsx3 #pip install pyttsx3
-import speech_recognition as sr #pip install speechRecognition
+import webbrowser
+import pyttsx3
+import speech_recognition as sr
 import datetime
-import wikipedia #pip install wikipedia
+import wikipedia
 import webbrowser
 import os
-import smtplib
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-# print(voices[1].id)
-engine.setProperty('voice', voices[0].id)
+engine.setProperty('voice',voices[0].id)
 
 
 def speak(audio):
@@ -20,90 +19,61 @@ def speak(audio):
 def wishMe():
     hour = int(datetime.datetime.now().hour)
     if hour>=0 and hour<12:
-        speak("Good Morning!")
-
+        speak("Good Morning Sir")
     elif hour>=12 and hour<18:
-        speak("Good Afternoon!")   
-
+        speak("Good Afternoon Sir")
     else:
-        speak("Good Evening!")  
+        speak("Good Evening Sir")
 
-    speak("I am FAI Sir, you're friendly neighbourhood assisstant. Please tell me how may I help you")       
-
+    speak("I am Jarvis Sir. How may I help you")
 
 def takeCommand():
-    #It takes string input from the user and returns string output
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        # r.pause_threshold =  0.6
+        audio = r.listen(source)
+        try:
+            print("Recognizing...")
+            query = r.recognize_google(audio, language="en-in")
+            print(f"User said: {query}")
+            return query
+        except Exception as e:
+            return "Some Error Occurred. Sorry from Jarvis"
 
-    print("Enter your command here")
-    query = input(" ")
-
-    try:
-        print("Recognizing...")    
-        print(f"User said: {query}\n")
-
-    except Exception as e:
-        # print(e)    
-        print("Say that again please...")  
-        return "None"
-    return query
-
-
-def sendEmail(to, content):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.login('youremail@gmail.com', 'your-password')
-    server.sendmail('youremail@gmail.com', to, content)
-    server.close()
-
-
-if __name__ == "__main__":
+if  __name__ == "__main__":
     wishMe()
     while True:
-    # if 1:
-        query = takeCommand().lower()
+        print("Listening...")
+        query = takeCommand()
 
-        # Logic for executing tasks based on query
+        #Logic for executing tasks base on query
+        sites = [["youtube","https://youtube.com"],
+                 ["spotify","https://spotify.com"],
+                 ["wikipedia","https://wikipedia.com"],
+                 ["google","https://google.com"]]
+        
+        for site in sites:
+            if f"Open {site[0]}".lower() in query.lower():
+                speak(f"Opening {site[0]} Sir")
+                webbrowser.open(site[1])
+
+        '''
         if 'wikipedia' in query:
-            speak('Searching Wikipedia...')
-            query = query.replace("wikipedia", "")
+            speak('Searching wikipedia...')
+            query = query.replace("wikipedia","")
             results = wikipedia.summary(query, sentences=2)
-            speak("According to Wikipedia")
+            speak("According to wikipedia")
             print(results)
             speak(results)
-            break
+            '''
 
-
-        elif 'open youtube' in query:
-            webbrowser.open("youtube.com")
-            break
-
-
-        elif 'open google' in query:
-            webbrowser.open("google.com")
-            break
-
-
-        elif 'open stackoverflow' in query:
-            webbrowser.open("stackoverflow.com")   
-            break
-            
-            
-        elif 'open github' in query:
-            webbrowser.open("https://github.com")
-            break
-
-
-        elif 'the time' in query:
-            strTime = datetime.datetime.now().strftime("%H:%M:%S")    
-            speak(f"Sir, the time is {strTime}")
-            print(f"Sir, the time is {strTime}")
-            break
+        if "open music" in query:
+            os.startfile("C:/Users/SAYAK/Downloads/Aayi-Nai.mp3")
         
+        if "the time" in query:
+            strfTime = datetime.datetime.now().strftime("%H:%M:%S")
+            speak(f"Sir the time now is {strfTime}")
 
-        elif 'open vscode' in query:
-            codePath = "C:\\Users\\Nirmalaya Mukherjee\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-            os.startfile(codePath)
+        if "stop now" in query:
+            speak("Ok sir stopping now, have a nice day")
             break
-        
-
